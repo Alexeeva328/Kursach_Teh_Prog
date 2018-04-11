@@ -1,0 +1,412 @@
+Shop.h
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <cstring>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+#pragma warning(disable : 4996)
+using namespace std;
+
+class Shop
+{
+	string Publishing_house;//издательство
+	int year;
+	int numbers;//число страниц
+	string photos;//наличие фотографий
+	string cards;//наличие карты
+	string binding;//переплет(твердый или мягкий)
+	string format; //(А2-А4)
+	string author;
+	int sum;//кол-во
+	string name;
+
+public:
+	void Zap();//нужно убрать, лишняя функция
+	void Shopp();
+	Shop() {};
+	Shop(int aa);
+	void show();
+	void sh_ware(char s);
+	virtual void find(Shop &r, string h);
+	
+};
+ 
+
+
+
+class Wirehouse :public Shop
+{
+	void find( string h)
+	{
+		FILE *wire;
+		fopen_s(&wire, "warehouse.dat", "r");
+		char str[100];
+		while (!feof(wire))
+		{
+
+			str[0] = '\0';
+			// Чтение одной строки  из файла
+			fgets(str, sizeof(str), wire);
+			if (str[0] != '\n')
+			{
+				if (strstr(str, h.c_str()))
+				{
+					cout << "\nwarehouse\n";
+					cout << str;
+					str[0] = '\0';
+					fgets(str, sizeof(str), wire);
+					while (str[0] != '\n')
+					{
+						cout << str;
+						str[0] = '\0';
+						fgets(str, sizeof(str), wire);
+					}
+
+				}
+			}
+		}
+		fclose(wire);
+	}
+};
+
+class Shop3 :public Shop
+{
+	
+public:
+	//Shop3() {};
+	friend Wirehouse;
+	void find( string h)
+	{
+		FILE *ssh3;
+		fopen_s(&ssh3, "shop3.dat", "r");
+		char str[100];
+		while (!feof(ssh3))
+		{
+			str[0] = '\0';
+			// Чтение одной строки  из файла
+			fgets(str, sizeof(str), ssh3);
+			if (str[0] != '\n')
+			{
+				if (strstr(str, h.c_str()))
+				{
+					cout << "\nFind in shop3\n";
+					cout << str;
+					str[0] = '\0';
+					fgets(str, sizeof(str), ssh3);
+					while (str[0] != '\n')
+					{
+						cout << str;
+						str[0] = '\0';
+						fgets(str, sizeof(str), ssh3);
+					}
+
+				}
+			}
+		}
+		fclose(ssh3);
+		//Wirehouse wr;
+		//next->find(&wr, h);
+
+	}
+};
+
+class Shop2 :public Shop
+{
+public:	
+//	Shop2() {};
+	friend Shop3;
+	void find( string h)
+	{
+		FILE *ssh2;
+		char str[100];
+		fopen_s(&ssh2, "shop2.txt", "r");
+		while (!feof(ssh2))
+		{
+			str[0] = '\0';
+			// Чтение одной строки  из файла
+			fgets(str, sizeof(str), ssh2);
+			if (str[0] != '\n')
+			{
+				if (strstr(str, h.c_str()))
+				{
+					cout << "\nFind in shop2\n" ;
+					cout << str;
+					str[0] = '\0';
+					fgets(str, sizeof(str), ssh2);
+					while (str[0] != '\n')
+					{
+						cout << str;
+						str[0] = '\0';
+						fgets(str, sizeof(str), ssh2);
+					}
+
+				}
+			}
+
+		}
+
+		fclose(ssh2);
+	}
+};
+
+class Shop1 :public Shop
+{
+public:
+
+	friend Shop2;
+	void find(Shop1 &r1, string h)
+	{
+		FILE *ssh1;
+		char str[100];
+		fopen_s(&ssh1, "shop1.txt", "r");
+		int i = 0;
+		string a;
+		char slovo[100];
+		
+		while (!feof(ssh1))
+		{
+			str[0]='\0';
+			// Чтение одной строки  из файла
+			fgets(str, sizeof(str), ssh1);
+			if (str[0] != '\n')
+			{
+				if (strstr(str, h.c_str()))
+				{
+					cout << "\nFind in shop1\n";
+					cout << str;
+					str[0] = '\0';
+					fgets(str, sizeof(str), ssh1);
+					while (str[0]!= '\n')
+					{
+						cout << str;
+						str[0] = '\0';
+						fgets(str, sizeof(str), ssh1);
+					}
+
+				}
+			}
+			
+		}
+
+		fclose(ssh1);
+	}
+};
+
+
+Shop.cpp
+#include <iostream>
+#include <string>
+#include <fstream> 
+#include "Shop.h"
+using namespace std;
+
+void Shop::Zap()
+{
+	FILE *ssh1;
+	fopen_s(&ssh1,"shop1.txt", "a");
+
+	string a;
+	cout << "input name a country" << endl;
+	cin >> a;
+	this->name = a;
+	fprintf_s(ssh1, "\n    %s \n",a.c_str());
+
+	cout << "input name a Publishing_house" << endl;
+	cin >> a;
+	this->Publishing_house = a;
+	fprintf_s(ssh1, "%s \n", a.c_str());
+	fclose(ssh1);
+}
+
+void Shop::Shopp()
+{
+	cout << "Input name a country:" ; cin >> name;
+	cout << "Input Publishing_house:" ; cin >> Publishing_house;
+	cout << "Input year:"; cin >> year;
+	cout << "Input number of pages in the guidebook:" ; cin >> numbers;
+	cout << "Are there any photos?  yes or not:"; cin >> photos;
+	cout << "Are there any cards?  yes or not:"; cin >> cards;
+	cout << "Input binding (hard or soft):"; cin >> binding;
+	cout << "Input format (A2 OR A3 OR A4):"; cin >> format;
+	cout << "Input author of the guide:"; cin >> author;
+	cout << "The total number of such guides:"; cin >> sum;
+	cout << endl;
+}
+
+Shop::Shop(int aa)
+{
+	//shs = new Shop[aa];
+	Shopp();
+}
+
+void Shop::show()
+{
+	cout << "Name a country  " << name << endl;
+	cout << "Publishing_house  " << Publishing_house << endl;
+	cout << "Year of publishing:"<<year<<endl;
+	cout << "Number of pages in the guidebook  " << numbers << endl;
+	cout << "The presence of photographs: yes or not  " << photos << endl;
+	cout << "The presence of photographs: yes or not " << cards << endl;
+	cout << "Binding  " << binding << endl;
+	cout << "Format  " << format << endl;
+	cout << "The author of the guide  " << author << endl;
+	cout << "The total number of such guides  " << sum << endl;
+	cout << endl;
+
+}
+
+void Shop :: sh_ware(char s)
+{
+	switch (s)
+	{
+	case 'a':
+		FILE *ssh1;
+		fopen_s(&ssh1, "shop1.txt", "a");
+		fprintf_s(ssh1, "\nName a country: %s \n Publishing_house: %s \n Year of publishing %d \n Number %d \n Photos %s \n  Cards %s \n Binding  %s \n Format %s \n Author %s \n The total number of such guides %d \n", name.c_str(), Publishing_house.c_str(), year, numbers, photos.c_str(), cards.c_str(), binding.c_str(), format.c_str(), author.c_str(),sum);
+		fclose(ssh1);
+		break;
+
+	case 'b':
+		FILE *ssh2;
+		fopen_s(&ssh2, "shop2.dat", "a+");
+		fprintf_s(ssh2, "\nName a country:%s\nPublishing_house:%s\nYear of publishing:%d\nNumber:%d\nPhotos:%s\nCards:%s\nBinding:%s\nFormat:%s\nAuthor:%s\nThe total number of such guides:%d\n",name.c_str(),Publishing_house.c_str(),year,this->numbers,this->photos.c_str(),this->cards.c_str(), this->binding.c_str(), this->format.c_str(), this->author.c_str(), this->sum);
+		fclose(ssh2);
+		break;
+
+	case 'c':
+		FILE *ssh3;
+		fopen_s(&ssh3, "shop3.dat", "a");
+		fprintf_s(ssh3, "\nName a country: %s \n Publishing_house: %s \n Year of publishing %d \n Number %d \n Photos %s \n  Cards %s \n Binding  %s \n Format %s \n Author %s \n The total number of such guides %d \n", name.c_str(), Publishing_house.c_str(), year, numbers, photos.c_str(), cards.c_str(), binding.c_str(), format.c_str(), author.c_str(), sum);
+		fclose(ssh3);
+		break;
+
+	case 'w':
+		FILE *wire;
+		fopen_s(&wire, "warehouse.dat", "a");
+		fprintf_s(wire, "\nName a country: %s \n Publishing_house: %s \n Year of publishing %d \n Number %d \n Photos %s \n  Cards %s \n Binding  %s \n Format %s \n Author %s \n The total number of such guides %d \n", name.c_str(), Publishing_house.c_str(), year, numbers, photos.c_str(), cards.c_str(), binding.c_str(), format.c_str(), author.c_str(), sum);
+		fclose(wire);
+		break;
+	}
+}
+
+void Shop::find(Shop &r, string h)
+{
+
+	 cout << "Start Find" << endl;
+};
+
+
+
+Source.cpp
+#include <iostream>
+#include <conio.h>
+#include <string> 
+
+#include <cstring>
+#include <clocale>
+#include <cstdio>
+
+#include "shop.h"
+using namespace std;
+
+void main()
+{
+	//Shop1 sh1;
+	//sh1.Zap1();
+	int n;//что будем делать
+	char k;//куда добавим в магазины или на склад
+	//cout << "Input a number of country: "; cin >> n;
+	//sh1 = new Shop1[n];
+	Shop sh;
+	Shop1 sh1;
+	Shop2 sh2;
+	Shop3 sh3;
+	Wirehouse WR;
+	char p;
+	string nn;
+	//char nn[30];
+	while (1)
+	{
+		cout << "--------Choose number menu:---------\n"
+			 << "e-add country\n"
+			 << "f-Find guidebook\n"
+			 << "s-show all guidebook\n"
+			 << "q-EXIT\n"
+			 << "-------------------------------------"
+			 <<endl;
+		cin>>p;
+		switch (p)
+		{
+		case 'e':
+
+			cout << "In which shop you want to add or to a warehouse?:\n"
+				<<"a-shop1 \n"
+				<<"b-shop2 \n"
+				<<"c-shop3 \n"
+				<<"w-warehouse"
+				<<endl;
+			cin >> k;
+			//sh[i].sh_ware(k);
+			//}
+		/*	switch (k)
+			{
+			case 'a':
+				sh1 = new Shop1;
+				//sh1 = sh;
+				sh1->sh_ware(k);
+				break;
+
+			case 'b':
+				sh = new Shop2;
+				sh->sh_ware(k);
+				break;
+
+			case 'c':
+				sh = new Shop3;
+				sh->sh_ware(k);
+				break;
+
+			case 'w':
+				sh = new Wirehouse;
+				sh->sh_ware(k);
+				break;
+			}*/
+			//sh = new Shop;
+			sh.Shopp();
+			sh.sh_ware(k);
+
+			break;
+		case 's':
+			cout << "All guidebooks: " << endl;
+		//	for (int i = 0; i < n; i++) {//????
+				cout << "==============================:" << endl;
+				cout << "\n\n";
+				//sh[i].show();
+		//	}
+			cout << "\n";
+			break;
+
+		case 'f':
+			cout << "----------Search by country name------------" << endl;
+			cout << "  Enter country name: " << endl;
+			cin >> nn;
+
+		//	sh.find(*ss1,nn);
+			sh1.find(sh1, nn);
+			sh2.find(nn);
+			break;
+
+		case 'q':
+			cout << " +++++=EXIT=+++++ " << endl;
+			goto exit;
+			break;
+
+		}
+	}
+	exit:getchar();
+}
